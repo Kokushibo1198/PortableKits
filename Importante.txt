@@ -1,0 +1,35 @@
+public function handleInteract(PlayerInteractEvent $event): void {
+
+    $player = $event->getPlayer();
+
+    $item = $event->getItem();
+
+    
+
+    if(!KitsPortable::isPortable($item)) return;
+
+    $event->cancel();
+
+    
+
+    $kitName = KitsPortable::getPortable($item);
+
+    if($kitName === null) return;
+
+    
+
+    $kit = HCFLoader::getInstance()->getHandlerManager()->getKitManager()->getKit($kitName);
+
+    if($kit === null) return;
+
+    
+
+    $kit->giveTo($player);
+
+    $item->setCount($item->getCount() - 1);
+
+    $player->getInventory()->setItemInHand($item);
+
+    $player->sendMessage(TextFormat::GREEN . "You have received the " . $kit->getNameFormat() . TextFormat::GREEN . " kit!");
+
+}
